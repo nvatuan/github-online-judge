@@ -1,4 +1,4 @@
-name: Judge participant submission
+name: Judge Upon Submission
 
 on:
   pull_request:
@@ -19,11 +19,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.before }}
-      
+
       - name: yq - portable yaml processor
         uses: mikefarah/yq@v4.40.5
+
+      - name: get-diff-action - get git diff
+        uses: technote-space/get-diff-action@v6
+        with:
+          PATTERNS: |
+            challenge_*/submit/*
       
       - name: Check dependencies
         run: bash ./judger/scripts/checks.sh
@@ -31,8 +35,8 @@ jobs:
       - name: Extract Submission Files
         run: echo "OK"
 
-      - name: Git fetch main
-        run: git fetch origin main
+      - name: Git fetch
+        run: git fetch origin/main
 
       - name: Judge Code 2
         run: bash ./judger/scripts/main.sh
