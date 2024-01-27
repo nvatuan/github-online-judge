@@ -1,7 +1,5 @@
 #!/bin/bash
 
-## MAY BE DEPRECATED
-
 ## Import utils 
 source judger/scripts/utils/peccho.sh
 
@@ -14,8 +12,9 @@ DEST_TO_CMP="origin/main"
 # Load a list of name of files being changed between two git source
 # Persist results to TMP_DATA_FILE
 function load_changed_files {
-  einfo "Loading changed files from git diff $SOURCE_TO_CMP to $DEST_TO_CMP"
-  local tmp=$(git diff --name-only $SOURCE_TO_CMP $DEST_TO_CMP)
+  einfo "Loading changed files from git diff from git-diff-action Github Package"
+  local tmp=$(echo $GIT_DIFF)
+  echo "$GIT_DIFF"
 
   edebug "Git diff from <$SOURCE_TO_CMP> to <$DEST_TO_CMP>:"
   edebug "-------"
@@ -36,35 +35,18 @@ SUBMISSION_REGEX_TO_FILTER=^challenge_[0-9]+\/submission\/main\.+$
 # Filter by regex of submission path.
 # Then persist results to TMP_DATA_FILE
 function load_submission_from_changed_files {
-  einfo "Loading submissions from changed files"
+  einfo "Loading submissions from changed files filtered by git-diff-action Github Package"
 
-  edebug "Check file: $TMP_DATA_FILE"
-  cat $TMP_DATA_FILE
-
-  if [ ! -f $TMP_DATA_FILE ]; then
-    efatal "Missing tmp data file: $TMP_DATA_FILE"
-    efatal "Be sure to run load_changed_files first."
-    return 1
-  fi
-
-  local tmp=$()
-  while IFS=" " read -r line; do
-    edebug "Check line: $line"
-    if [[ $line =~ $SUBMISSION_REGEX_TO_FILTER ]]; then
-      tmp+=( $line )
-    fi
-  done < $TMP_DATA_FILE
-
-  edebug "Found submissions:"
+  edebug "Found these submissions:"
   edebug "-------"
   if [ "$DEBUG" = "true" ]; then
-    echo $tmp
+    echo $GIT_DIFF_FILTERED
   fi
   edebug "-------"
   echo
 
   # Persist
-  echo $tmp > $TMP_DATA_FILE
+  echo $GIT_DIFF_FILTERED > $TMP_DATA_FILE
   esucceed "Updated $TMP_DATA_FILE."
 }
 

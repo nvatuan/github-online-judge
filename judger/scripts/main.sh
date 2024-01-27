@@ -5,7 +5,7 @@
 source ./judger/scripts/utils/peccho.sh
 
 ### Directory
-source ./judger/scripts/utils/dir.sh
+source ./judger/scripts/utils/dir_with_gitdiff.sh
 
 ### Locator
 #### Find problem id and file extension
