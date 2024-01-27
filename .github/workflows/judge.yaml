@@ -1,0 +1,40 @@
+name: Judge participant submission
+
+on:
+  pull_request:
+    # paths:
+    #   - "challenge_*/submission/main.go"
+    # branches:
+    #   - "submit/*"
+    #   - "github-action-judge"
+  workflow_dispatch:
+
+env:
+  TERM: xterm # to use tput
+  DEBUG: true
+jobs:
+  judge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.before }}
+      
+      - name: yq - portable yaml processor
+        uses: mikefarah/yq@v4.40.5
+      
+      - name: Check dependencies
+        run: bash ./judger/scripts/checks.sh
+      
+      - name: Extract Submission Files
+        run: echo "OK"
+
+      - name: Git fetch main
+        run: git fetch origin main
+
+      - name: Judge Code 2
+        run: bash ./judger/scripts/main.sh
+        env:
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
