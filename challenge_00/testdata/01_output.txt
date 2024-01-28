@@ -1,1 +1,1 @@
-Hello, Platform SRE!
+Hello, Github!

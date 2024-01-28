@@ -30,7 +30,7 @@ function load_changed_files {
   esucceed "Wrote to $TMP_DATA_FILE."
 }
 
-SUBMISSION_REGEX_TO_FILTER=^challenge_[0-9]+\/submission\/main\.+$
+SUBMISSION_REGEX_TO_FILTER=^challenge_[0-9]+\/submit\/main\.+$
 
 # Load submission files from a list of files from TMP_DATA_FILE
 # Filter by regex of submission path.
@@ -47,7 +47,7 @@ function load_submission_from_changed_files {
     return 1
   fi
 
-  local tmp=$()
+  local tmp=()
   while IFS=" " read -r line; do
     edebug "Check line: $line"
     if [[ $line =~ $SUBMISSION_REGEX_TO_FILTER ]]; then

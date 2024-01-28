@@ -32,8 +32,10 @@ function do_grading {
     return 1
   fi
 
-	local diff_parts=$(diff -y <(cat "$1") <(cat "$2"))
+	diff -y <(cat "$1") <(cat "$2") > /dev/null
 	if [ $? -ne 0 ]; then
+    local diff_parts=$(diff -y <(cat "$1") <(cat "$2"))
+
     edebug "Outputs diff: <<<EOF---"
     if [ ! -z $DEBUG ]; then
       echo "$diff_parts"

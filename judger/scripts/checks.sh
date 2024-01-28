@@ -7,4 +7,11 @@ then
   exit 1
 fi
 
+## Check if docker daemon is running
+if ! docker info &> /dev/null
+then
+  echo "Docker daemon is not running. Please start docker daemon first."
+  exit 1
+fi
+
 echo "OK"

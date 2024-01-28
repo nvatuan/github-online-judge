@@ -5,7 +5,11 @@
 source ./judger/scripts/utils/peccho.sh
 
 ### Directory
-source ./judger/scripts/utils/dir_with_gitdiff.sh
+if [ -z "$LOCAL" ]; then
+  source ./judger/scripts/utils/dir_with_gitdiff.sh
+else
+  source ./judger/scripts/utils/dir.sh
+fi
 
 ### Locator
 #### Find problem id and file extension
@@ -22,6 +26,11 @@ function pre_judge() {
 
   einfo "Found these files to be judged:"
   cat_tmp_data_file
+
+  if [ -z "$(cat $TMP_DATA_FILE)" ]; then
+    efatal "Found nothing. Stop judging."
+    exit 1
+  fi
 }
 
 JUDGE_STATUS_EXITCODE=0
