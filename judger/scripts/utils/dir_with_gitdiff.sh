@@ -13,8 +13,10 @@ DEST_TO_CMP="origin/main"
 # Persist results to TMP_DATA_FILE
 function load_changed_files {
   einfo "Loading changed files from git diff from git-diff-action Github Package"
-  local tmp=$(echo $GIT_DIFF)
   echo "$GIT_DIFF"
+
+  edebug "git-diff-action wraps filepath with single quotes, so we need to remove them."
+  local tmp=$(echo $GIT_DIFF | tr -d "'")
 
   edebug "Git diff from <$SOURCE_TO_CMP> to <$DEST_TO_CMP>:"
   edebug "-------"
@@ -37,16 +39,19 @@ SUBMISSION_REGEX_TO_FILTER=^challenge_[0-9]+\/submission\/main\.+$
 function load_submission_from_changed_files {
   einfo "Loading submissions from changed files filtered by git-diff-action Github Package"
 
+  edebug "git-diff-action wraps filepath with single quotes, so we need to remove them."
+  local tmp=$(echo $GIT_DIFF_FILTERED | tr -d "'")
+
   edebug "Found these submissions:"
   edebug "-------"
   if [ "$DEBUG" = "true" ]; then
-    echo $GIT_DIFF_FILTERED
+    echo $tmp
   fi
   edebug "-------"
   echo
 
   # Persist
-  echo $GIT_DIFF_FILTERED > $TMP_DATA_FILE
+  echo $tmp > $TMP_DATA_FILE
   esucceed "Updated $TMP_DATA_FILE."
 }
 
