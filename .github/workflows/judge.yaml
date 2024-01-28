@@ -1,0 +1,38 @@
+name: Judge Upon Submission
+
+on:
+  pull_request:
+    # paths:
+    #   - "challenge_*/submission/main.go"
+    # branches:
+    #   - "submit/*"
+    #   - "github-action-judge"
+  workflow_dispatch:
+
+env:
+  TERM: xterm # to use tput
+  DEBUG: true
+jobs:
+  judge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: yq - portable yaml processor
+        uses: mikefarah/yq@v4.40.5
+
+      - name: get-diff-action - get git diff
+        uses: technote-space/get-diff-action@v6
+        with:
+          PATTERNS: |
+            challenge_*/submit/*
+      
+      - name: Check dependencies
+        run: bash ./judger/scripts/checks.sh
+
+      - name: Judge Code
+        run: bash ./judger/scripts/main.sh
+        env:
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
